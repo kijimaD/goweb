@@ -16,6 +16,7 @@ func main() {
 
 	mux.HandleFunc("/", index) // ルートURLをハンドラ関数にリダイレクトする
 
+	// マルチプレクサをサーバに付加
 	server := &http.Server{
 		Addr: "0.0.0.0:8080",
 		Handler: mux,
@@ -26,11 +27,23 @@ func main() {
 // ハンドラ関数は第1引数にResponseWriterを取り、第2引数にRequestへのポインタを取るGoの関数にすぎない
 // HTMLを生成してResponseWriterに書き出す
 func index(w http.ResponseWriter, r *http.Request) {
-	files := []string{"templates/layout.html",
-		"templates/navbar.html",
-		"templates/index.html",}
-	templates := template.Must(template.ParseFiles(files...))
 	threads, err := data.Threads(); if err == nil {
-		templates.ExecuteTemplate(w, "layout", threads)
+		_, err := session(writer, request)
+		if err != nil {
+			generateHTML(writer, threads, "layout", "public.navbar", "index")
+		} else {
+			generateHTML(writer, threads, "layout", "private.navbar", "index")
+		}
 	}
 }
+
+// Webアプリケーションの流れ
+
+// 1. クライアントがサーバにリクエストを送る
+// 2. リクエストはマルチプレクサが受信し、適切なハンドラにリダイレクトする
+// 3. ハンドラがリクエストを処理する
+// 4. データが必要な場合は、データベース内のデータをモデル化
+// 5. モデルはデータベースと接続する。これはデータ構造の関数やメソッドによって発動されて行われる
+// 6. 処理が完了すると、ハンドラはテンプレートエンジンを起動し、場合によってモデルからデータを送信する
+// 7. テンプレートエンジンがテンプレートファイルを解析しテンプレートを作成する。テンプレートはデータと組み合わされてHTMLとなる
+// 8. 生成されたHTMLはレスポンスの一部としてクライアントに返送される

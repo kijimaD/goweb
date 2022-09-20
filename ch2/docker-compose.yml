@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: app
+    depends_on:
+      - postgres
+    image: golang
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+      - go_volume:/.go
+    working_dir: /app
+    command: bash -c "go run ."
+
+  postgres:
+    container_name: postgres
+    build:
+      context: .
+      dockerfile: ./data/Dockerfile
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+    volumes:
+      - .:/db
+    working_dir: /db
+
+volumes:
+  go_volume:

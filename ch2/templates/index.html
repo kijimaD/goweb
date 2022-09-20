@@ -1,14 +1,18 @@
+<!-- アクション内のドットは最終的な出力を生成するために組み合わせるデータとして、テンプレートに渡されるものを表している -->
+
 {{ define "content" }}
 <p class="lead">
   <a href="/thread/new">スレッドを開始するか</a> 下のどれかに参加しましょう！
 </p>
 
+<!-- ↓このドットはこの場合、関数Threadsを使って抽出しておいた変数threadsであり、構造体Threadのスライス -->
 {{ range . }}
   <div class="panel panel-default">
     <div class="panel-heading">
       <span class="lead"> <i class="fa fa-comment-o"></i> {{ .Topic }}</span>
     </div>
     <div class="panel-body">
+      <!-- .のあとにフィールド名を置くと構造体の中のデータにアクセスするが、「メソッド」と呼ばれる特殊な型の関数についても「.」をつけて呼び出すことができる。メソッドは名前付きの型(構造体を含む)に付属した関数。構造体Threadへのポインタに対してメソッドを付属させることで、メソッドからスレッドにアクセスできるようになる。-->
       開始ユーザー {{ .User.Name }} - 開始日 {{ .CreatedAtDate }} - 投稿数 {{ .NumReplies }}。
       <div class="pull-right">
         <a href="/thread/read?id={{.Uuid }}">もっと読む</a>
