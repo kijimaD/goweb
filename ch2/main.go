@@ -8,33 +8,39 @@ import (
 )
 
 func main() {
+	p("ChitChat", version(), "started at", config.Address)
+
 	mux := http.NewServeMux() // デフォルトのマルチプレクサ
 	files := http.FileServer(http.Dir("/public"))
 	mux.Handle("/static/", http.StripPrefix("/static/", files)) // マルチプレクサはハンドラへのリクエストに使えるだけでなく、静的なファイルの返送にも使える。
 	// /static/で始まるすべてのリクエストURLについて、URLから文字列/staticを取り去り、ディレクトリpublicを起点として、残った文字列を名前にもつファイルを探す。
 	// /static/example.txt の場合は、./example.txt を探す。ここでいうルートディレクトリはpublicなので、リポジトリ的には、./public/example.txt を探す。
 
+	// index
 	mux.HandleFunc("/", index) // ルートURLをハンドラ関数にリダイレクトする
+	// error
+	mux.HandleFunc("/err", err)
 
-	// マルチプレクサをサーバに付加
+	// defined in route_auth.go
+	mux.HandleFunc("/login", login)
+	mux.HandleFunc("/logout", logout)
+	mux.HandleFunc("/signup", signup)
+	mux.HandleFunc("/signup_account", signupAccount)
+	mux.HandleFunc("/authenticate", authenticate)
+
+	// defined in route_thread.go
+	mux.HandleFunc("/thrad/new", newThread)
+	mux.HandleFunc("/thread/create", createThread)
+	mux.HandleFunc("/thread/post", postThread)
+	mux.HandleFunc("/thread/read", readThread)
+
+	// サーバを開始、マルチプレクサをサーバに付加する
+	// マルチプレクサとは、複数の信号を受け、それらを選択したりまとめたりして一つの信号として出力する装置や素子、機構などのこと
 	server := &http.Server{
 		Addr: "0.0.0.0:8080",
 		Handler: mux,
 	}
 	server.ListenAndServe()
-}
-
-// ハンドラ関数は第1引数にResponseWriterを取り、第2引数にRequestへのポインタを取るGoの関数にすぎない
-// HTMLを生成してResponseWriterに書き出す
-func index(w http.ResponseWriter, r *http.Request) {
-	threads, err := data.Threads(); if err == nil {
-		_, err := session(writer, request)
-		if err != nil {
-			generateHTML(writer, threads, "layout", "public.navbar", "index")
-		} else {
-			generateHTML(writer, threads, "layout", "private.navbar", "index")
-		}
-	}
 }
 
 // Webアプリケーションの流れ
