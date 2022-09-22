@@ -36,10 +36,10 @@ func main() {
 	// サーバを開始、マルチプレクサをサーバに付加する
 	// マルチプレクサとは、複数の信号を受け、それらを選択したりまとめたりして一つの信号として出力する装置や素子、機構などのこと
 	server := &http.Server{
-		Addr: config.Address,
-		Handler: mux,
-		ReadTimeout: time.Duration(config.ReadTimeout * int64(time.Second)),
-		WriteTimeout: time.Duration(config.WriteTimeout * int64(time.Second)),
+		Addr:           config.Address,
+		Handler:        mux,
+		ReadTimeout:    time.Duration(config.ReadTimeout * int64(time.Second)),
+		WriteTimeout:   time.Duration(config.WriteTimeout * int64(time.Second)),
 		MaxHeaderBytes: 1 << 20,
 	}
 	server.ListenAndServe()

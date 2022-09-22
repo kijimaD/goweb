@@ -1,10 +1,10 @@
 package main
 
-import(
+import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"example/data"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -13,10 +13,10 @@ import(
 )
 
 type Configuration struct {
-	Address string
-	ReadTimeout int64
+	Address      string
+	ReadTimeout  int64
 	WriteTimeout int64
-	Static string
+	Static       string
 }
 
 var config Configuration
@@ -79,8 +79,8 @@ func parseTemplateFiles(filenames ...string) (t *template.Template) {
 	return
 }
 
-/// HTMLを生成する。...は可変長引数。テンプレートファイルをいくつでも渡せるようになる
-func generateHTML  (w http.ResponseWriter, data interface{}, fn ...string) {
+// / HTMLを生成する。...は可変長引数。テンプレートファイルをいくつでも渡せるようになる
+func generateHTML(w http.ResponseWriter, data interface{}, fn ...string) {
 	var files []string
 	for _, file := range fn {
 		files = append(files, fmt.Sprintf("templates/%s.html", file))

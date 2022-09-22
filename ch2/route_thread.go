@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"example/data"
+	"fmt"
 	"net/http"
 )
 
 // GET /threads/new
 // Show the new thread form page
-func newThread(writer http.ResponseWriter, request * http.Request) {
+func newThread(writer http.ResponseWriter, request *http.Request) {
 	_, err := session(writer, request)
 	if err != nil {
 		http.Redirect(writer, request, "/login", 302)

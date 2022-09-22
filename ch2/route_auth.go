@@ -25,9 +25,9 @@ func signupAccount(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		danger(err, "Cannot parse form")
 	}
-	user := data.User {
-		Name: request.PostFormValue("name"),
-		Email: request.PostFormValue("email"),
+	user := data.User{
+		Name:     request.PostFormValue("name"),
+		Email:    request.PostFormValue("email"),
 		Password: request.PostFormValue("password"),
 	}
 	if err := user.Create(); err != nil {
@@ -50,9 +50,9 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 			danger(err, "Cannot create session")
 		}
 		cookie := http.Cookie{ // セッション情報をクッキーに書き込む
-			Name: "_cookie",
-			Value: session.Uuid, // 最も重要な値。これをブラウザに保存したい。IDなのであとから引ける
-			HttpOnly: true, // クッキーへのアクセスをHTTPとHTTPSにのみ許可。jsで書き換えられないように
+			Name:     "_cookie",
+			Value:    session.Uuid, // 最も重要な値。これをブラウザに保存したい。IDなのであとから引ける
+			HttpOnly: true,         // クッキーへのアクセスをHTTPとHTTPSにのみ許可。jsで書き換えられないように
 		}
 		http.SetCookie(w, &cookie) // レスポンスヘッダーにクッキを書く。ユーザがログインしたら、その後のリクエストではユーザがすでにログインしているということが示されている必要がある。クッキーはクライアントに送信され、ブラウザに保存される
 		http.Redirect(w, r, "/", 302)

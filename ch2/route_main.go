@@ -9,7 +9,7 @@ import (
 // HTMLを生成してResponseWriterに書き出す
 
 // クライアントに返信するHTMLの生成
-func index(writer http.ResponseWriter, request *http.Request){
+func index(writer http.ResponseWriter, request *http.Request) {
 	threads, err := data.Threads()
 	if err != nil {
 		error_message(writer, request, "Cannot get threads")
