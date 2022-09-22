@@ -1,17 +1,15 @@
-// マルチプレクサ: リクエストをハンドラにリダイレクトするコード
-
 package main
 
 import (
 	"net/http"
-	"html/template"
+	"time"
 )
 
 func main() {
 	p("ChitChat", version(), "started at", config.Address)
 
 	mux := http.NewServeMux() // デフォルトのマルチプレクサ
-	files := http.FileServer(http.Dir("/public"))
+	files := http.FileServer(http.Dir(config.Static))
 	mux.Handle("/static/", http.StripPrefix("/static/", files)) // マルチプレクサはハンドラへのリクエストに使えるだけでなく、静的なファイルの返送にも使える。
 	// /static/で始まるすべてのリクエストURLについて、URLから文字列/staticを取り去り、ディレクトリpublicを起点として、残った文字列を名前にもつファイルを探す。
 	// /static/example.txt の場合は、./example.txt を探す。ここでいうルートディレクトリはpublicなので、リポジトリ的には、./public/example.txt を探す。
@@ -23,7 +21,7 @@ func main() {
 
 	// defined in route_auth.go
 	mux.HandleFunc("/login", login)
-	mux.HandleFunc("/logout", logout)
+	// mux.HandleFunc("/logout", logout)
 	mux.HandleFunc("/signup", signup)
 	mux.HandleFunc("/signup_account", signupAccount)
 	mux.HandleFunc("/authenticate", authenticate)
@@ -34,11 +32,15 @@ func main() {
 	mux.HandleFunc("/thread/post", postThread)
 	mux.HandleFunc("/thread/read", readThread)
 
+	// マルチプレクサ: リクエストをハンドラにリダイレクトするコード
 	// サーバを開始、マルチプレクサをサーバに付加する
 	// マルチプレクサとは、複数の信号を受け、それらを選択したりまとめたりして一つの信号として出力する装置や素子、機構などのこと
 	server := &http.Server{
-		Addr: "0.0.0.0:8080",
+		Addr: config.Address,
 		Handler: mux,
+		ReadTimeout: time.Duration(config.ReadTimeout * int64(time.Second)),
+		WriteTimeout: time.Duration(config.WriteTimeout * int64(time.Second)),
+		MaxHeaderBytes: 1 << 20,
 	}
 	server.ListenAndServe()
 }

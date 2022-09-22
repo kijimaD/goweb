@@ -1,0 +1,6 @@
+ERROR 2022/09/22 17:30:40 utils.go:100: dial tcp 127.0.0.1:5432: connect: connection refused Cannot create user
+ERROR 2022/09/22 17:30:53 utils.go:100: dial tcp 127.0.0.1:5432: connect: connection refused Cannot find user
+ERROR 2022/09/22 17:31:06 utils.go:100: dial tcp 127.0.0.1:5432: connect: connection refused Cannot find user
+ERROR 2022/09/22 17:31:41 utils.go:100: dial tcp 127.0.0.1:5432: connect: connection refused Cannot create user
+ERROR 2022/09/22 17:31:51 utils.go:100: dial tcp 127.0.0.1:5432: connect: connection refused Cannot find user
+ERROR 2022/09/22 17:32:19 utils.go:100: dial tcp 127.0.0.1:5432: connect: connection refused Cannot find user

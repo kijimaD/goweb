@@ -15,7 +15,7 @@ func login(writer http.ResponseWriter, request *http.Request) {
 // GET /signup
 // Show the signup page
 func signup(writer http.ResponseWriter, request *http.Request) {
-	geenrateHTML(writer, nil, "login.layout", "public.navbar", "signup")
+	generateHTML(writer, nil, "login.layout", "public.navbar", "signup")
 }
 
 // POST /signup
@@ -39,13 +39,13 @@ func signupAccount(writer http.ResponseWriter, request *http.Request) {
 // POST /authenticate
 // ユーザを認証し、クライアントにクッキーを返すハンドラ
 func authenticate(w http.ResponseWriter, r *http.Request) {
-	err := request.ParseForm()
+	err := r.ParseForm()
 	user, err := data.UserByEmail(r.PostFormValue("email")) // ユーザ検索して構造体Userを返す
 	if err != nil {
 		danger(err, "Cannot find user")
 	}
 	if user.Password == data.Encrypt(r.PostFormValue("password")) { // データベース内に保存されているパスワードが、ハンドラに渡された暗号化パスワードと同じであることをチェックする
-		session := user.CreateSession() // 取得したユーザのセッションを作成
+		session, err := user.CreateSession() // 取得したユーザのセッションを作成
 		if err != nil {
 			danger(err, "Cannot create session")
 		}
