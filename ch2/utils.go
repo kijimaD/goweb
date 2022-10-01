@@ -57,7 +57,7 @@ func error_message(writer http.ResponseWriter, request *http.Request, msg string
 
 // ユーザがログインしているかチェックする
 func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err error) {
-	cookie, err := r.Cookie("_cookie")
+	cookie, err := r.Cookie("_cookie") // リクエストからクッキーを取得
 	if err == nil {
 		sess = data.Session{Uuid: cookie.Value}
 		if ok, _ := sess.Check(); !ok {

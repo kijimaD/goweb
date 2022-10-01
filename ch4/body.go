@@ -31,3 +31,9 @@ func main() {
 // Content-Type: text/plain; charset=utf-8
 
 // first_name=sausheong_last_name=chang
+
+
+
+// POSTリクエストのすべてがHTMLフォームから送られてくるわけではない
+// Angularクライアントから送信されたPOSTクライアントからJSON形式のデータを取得しようとして、メソッドParseFormを呼び出しても、できない
+// クライアントフレームワークによって、POSTリクエストのエンコード方法が異なるため
